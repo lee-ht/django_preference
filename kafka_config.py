@@ -8,7 +8,7 @@ from config.settings import env
 
 class KafkaConfig:
     def __init__(self):
-        print("Connecting Kafka")
+        print("Connecting Kafka : ", end="")
         self.__producer = KafkaProducer(
             acks=1,
             compression_type='gzip',
@@ -16,14 +16,14 @@ class KafkaConfig:
             value_serializer=lambda v: json.dumps(v).encode('utf-8'),
             batch_size=1,
         )
-        print(self.__producer.bootstrap_connected())
+        print(self.__producer.bootstrap_connected(), end=", ")
         # topic 여러개 생성시 dict key: topic , value: consumer
         self.__consumer = KafkaConsumer(
             "RawData",
             bootstrap_servers=[env("KAFKA_URL")],
             value_deserializer=lambda v: json.loads(v.decode('utf-8')),
             consumer_timeout_ms=1000,
-            auto_offset_reset='earliest',
+            # auto_offset_reset='earliest',
         )
         print(self.__consumer.bootstrap_connected())
 
@@ -32,6 +32,6 @@ class KafkaConfig:
         self.__producer.flush()
 
     async def get_msgs(self):
-        for message in self.__consumer:
-            print(f"{message.topic},{message.key},{message.value}")
-            # break
+        print(self.__consumer.poll(timeout_ms=10000))
+        # for message in self.__consumer:
+        #     print(f"{message.topic},{message.key},{message.value}")
