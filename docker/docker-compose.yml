@@ -1,0 +1,46 @@
+version: '3.9'
+services:
+
+  database:
+    container_name: postgresql-db
+    image: postgres
+    ports:
+      - ${POSTGRES_PORT}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PW}
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8
+    restart: always
+
+  redis:
+    container_name: redis_redis-stack
+    image: redis/redis-stack
+    ports:
+      - ${REDIS_PORT}
+      - ${REDIS_STACK_PORT}
+    restart: always
+
+  zookeeper:
+    image: zookeeper
+    container_name: zookeeper
+    ports:
+      - ${ZOOKEEPER_PORT}
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: ${ZK_ENV_PORT}
+    restart: always
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - ${KAFKA_PORT}
+    environment:
+      KAFKA_BROKER_ID: 1 # 카프카 브로커 ID
+      KAFKA_CREATE_TOPICS: "RawData:1:2" # 컨테이너 생성시 토픽 생성
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${KAFKA_ZK_CONN} # zookeeper 연결 대상 지정 (서비스 이름 : 컨테이너 내부 포트)
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+    restart: always

@@ -1,0 +1,65 @@
+import json
+
+from django.core.cache import cache
+from django.http import JsonResponse, HttpResponse
+from django.views import View
+
+from apps.app.constants import REDIS_TTL
+from apps.app.models import RawData
+from kafka_config import KafkaConfig
+from utils.jsons import obj_to_json
+
+
+class GetFiles(View):
+    async def get(self, request):
+        return HttpResponse('')
+
+
+class Redis(View):
+    async def post(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+        key = body['key']
+        value = body['value']
+
+        cache.set(key, value, timeout=REDIS_TTL)
+        data = cache.get(key)
+        return JsonResponse({key: data})
+
+
+class Database(View):
+    async def get(self, request, name):
+        # raws = RawData.objects.filter(name=name)
+        raws = RawData.objects.all()
+        data = obj_to_json(raws)
+
+        return JsonResponse(data, safe=False)
+
+    async def post(self, request):
+        body = json.loads(request.body.decode('utf-8'))
+        raws = RawData()
+        raws.name = body['name']
+        raws.value = body['value']
+
+        raws.save()
+
+        return HttpResponse('', status=200)
+
+    async def delete(self, request):
+        raws = RawData.objects.all()
+        raws.delete()
+
+        return HttpResponse('', status=204)
+
+
+kafka_conf = KafkaConfig()
+
+
+class Broker(View):
+    async def get(self, request):
+        await kafka_conf.get_msgs()
+        return HttpResponse('')
+
+    async def post(self, request):
+        body = json.loads(request.body)
+        await kafka_conf.send_msg(body)
+        return HttpResponse('')

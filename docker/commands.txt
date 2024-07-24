@@ -1,0 +1,11 @@
+## Docker commands
+## { } 는 description
+## docker directory 의 .env 환경변수 수정
+
+1) docker-compose -f {Path::docker-compose.yml} up -d
+example) docker-compose -f .\docker\docker-compose.yml up -d
+
+commands ==>
+1) docker exec -it postgresql-db bash
+2) psql -U {POSTGRES_USER}
+example) psql -U pguser
