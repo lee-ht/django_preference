@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from django.core.cache import cache
@@ -6,7 +7,7 @@ from django.views import View
 
 from apps.app.constants import REDIS_TTL
 from apps.app.models import RawData
-from kafka_config import KafkaConfig
+from kafka_config import KafkaConfig, AIOKafka
 from utils.jsons import obj_to_json
 
 
@@ -51,15 +52,18 @@ class Database(View):
         return HttpResponse('', status=204)
 
 
-kafka_conf = KafkaConfig()
+# kafka_conf = KafkaConfig()
+aiokafka = AIOKafka()
 
 
 class Broker(View):
     async def get(self, request):
-        await kafka_conf.get_msgs()
-        return HttpResponse('')
+        msg = await aiokafka.get_single_msg()
+
+        return JsonResponse(msg)
 
     async def post(self, request):
         body = json.loads(request.body)
-        await kafka_conf.send_msg(body)
-        return HttpResponse('')
+        await aiokafka.send_msg(body)
+
+        return JsonResponse(body)

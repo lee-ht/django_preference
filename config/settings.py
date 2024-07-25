@@ -158,4 +158,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # async ORM
 
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+# os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
