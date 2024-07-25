@@ -12,6 +12,7 @@ from django.views import View
 from apps.app.constants import REDIS_TTL
 from apps.app.models import RawData
 from kafka_config import KafkaConfig, AIOKafka
+from rabbitmq_config import RabbitMQ_CONF
 from utils.jsons import obj_to_json
 
 
@@ -73,38 +74,17 @@ class Broker(View):
         return JsonResponse(body)
 
 
+rabbitmq = RabbitMQ_CONF()
+
+
 class RabbitMQ(View):
     async def get(self, request):
-        qname = "RawData"
-        conn = await aio_pika.connect_robust(
-            "amqp://localhost"
-        )
-        async with conn:
-            channel = await conn.channel()
+        msg = await rabbitmq.get_single_msg()
 
-            queue = await channel.declare_queue(qname)
-
-            async def process_message(message):
-                async with message.process():
-                    print(f"{message.body.decode()}")
-
-            await queue.consume(process_message)
-
-            await asyncio.Future()
-        return HttpResponse('')
+        return HttpResponse(msg)
 
     async def post(self, request):
         body = request.body
-        qname = "RawData"
-        connection = await aio_pika.connect_robust(
-            "amqp://localhost",
-        )
-
-        async with connection:
-            channel = await connection.channel()
-
-            message = Message(body)
-            await channel.default_exchange.publish(message, routing_key=qname)
-            print("전송 완료")
+        await rabbitmq.send_msg(body)
 
         return HttpResponse('')
