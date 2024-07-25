@@ -13,4 +13,6 @@ urlpatterns = [
     path('delete', views.Database.as_view(), name='delete'),
     # Kafka
     path('kafka', views.Broker.as_view(), name='kafka'),
+    # RabbitMQ
+    path("rabbit", views.RabbitMQ.as_view(), name='rabbitmq')
 ]

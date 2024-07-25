@@ -1,6 +1,10 @@
 import asyncio
 import json
+import logging
 
+import aio_pika
+import pika
+from aio_pika import Message
 from django.core.cache import cache
 from django.http import JsonResponse, HttpResponse
 from django.views import View
@@ -67,3 +71,40 @@ class Broker(View):
         await aiokafka.send_msg(body)
 
         return JsonResponse(body)
+
+
+class RabbitMQ(View):
+    async def get(self, request):
+        qname = "RawData"
+        conn = await aio_pika.connect_robust(
+            "amqp://localhost"
+        )
+        async with conn:
+            channel = await conn.channel()
+
+            queue = await channel.declare_queue(qname)
+
+            async def process_message(message):
+                async with message.process():
+                    print(f"{message.body.decode()}")
+
+            await queue.consume(process_message)
+
+            await asyncio.Future()
+        return HttpResponse('')
+
+    async def post(self, request):
+        body = request.body
+        qname = "RawData"
+        connection = await aio_pika.connect_robust(
+            "amqp://localhost",
+        )
+
+        async with connection:
+            channel = await connection.channel()
+
+            message = Message(body)
+            await channel.default_exchange.publish(message, routing_key=qname)
+            print("전송 완료")
+
+        return HttpResponse('')

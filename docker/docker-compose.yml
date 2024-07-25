@@ -44,3 +44,14 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:${KAFKA_ZK_CONN} # zookeeper 연결 대상 지정 (서비스 이름 : 컨테이너 내부 포트)
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
     restart: always
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - ${RABBIT_PORT}
+      - ${RABBIT_UI_PORT}
+#    environment:
+#      RABBITMQ_DEFAULT_USER: admin
+#      RABBITMQ_DEFAULT_PASS: admin
+    restart: always
