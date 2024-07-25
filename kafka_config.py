@@ -22,7 +22,7 @@ class KafkaConfig:
             "RawData",
             bootstrap_servers=[env("KAFKA_URL")],
             value_deserializer=lambda v: json.loads(v.decode('utf-8')),
-            consumer_timeout_ms=1000,
+            consumer_timeout_ms=10000,
             # auto_offset_reset='earliest',
         )
         print(self.__consumer.bootstrap_connected())
@@ -32,6 +32,8 @@ class KafkaConfig:
         self.__producer.flush()
 
     async def get_msgs(self):
-        print(self.__consumer.poll(timeout_ms=10000))
+        response = self.__consumer.poll(timeout_ms=10000)
+        for row in response.values():
+            data = row[0].value
         # for message in self.__consumer:
         #     print(f"{message.topic},{message.key},{message.value}")
