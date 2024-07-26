@@ -61,9 +61,11 @@ class Database(View):
 aiokafka = AIOKafka()
 
 
-class Broker(View):
+class KafkaConnect(View):
     async def get(self, request):
-        msg = await aiokafka.get_single_msg()
+        while True:
+            msg = await aiokafka.get_single_msg()
+            print(msg)
 
         return JsonResponse(msg)
 

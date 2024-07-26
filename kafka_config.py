@@ -43,13 +43,13 @@ class KafkaConfig:
 # aiokafka
 class AIOKafka:
     def __init__(self):
-        pass
+        self.__URL = env("KAFKA_URL")
 
     async def send_msg(self, value: dict, topic="RawData"):
         producer = AIOKafkaProducer(
             acks=1,
             compression_type="gzip",
-            bootstrap_servers=env("KAFKA_URL"),
+            bootstrap_servers=self.__URL,
             value_serializer=lambda v: json.dumps(v).encode('utf-8'),
             max_batch_size=1,
         )
@@ -66,10 +66,12 @@ class AIOKafka:
     async def get_single_msg(self, topic="RawData"):
         consumer = AIOKafkaConsumer(
             topic,
-            bootstrap_servers=env("KAFKA_URL"),
+            bootstrap_servers=self.__URL,
             value_deserializer=lambda v: json.loads(v.decode('utf-8')),
             consumer_timeout_ms=10000,
             # auto_offset_reset="earliest"
+            # 같은 컨슈머 그룹 내의 컨슈머들은 각각 하나의 파티션에 대해서만 접근 가능
+            # group_id="group1",
         )
 
         try:
@@ -81,3 +83,17 @@ class AIOKafka:
             print("error ===== ", e)
         finally:
             await consumer.stop()
+
+    async def conn_topic(self, topic="RawData"):
+        consumer = AIOKafkaConsumer(
+            topic,
+            bootstrap_servers=self.__URL,
+            value_deserializer=lambda v: json.loads(v.decode('utf-8')),
+            consumer_timeout_ms=10000,
+            # auto_offset_reset="earliest"
+        )
+
+        try:
+            await consumer.start()
+        except Exception as e:
+            print("error ===== ", e)
