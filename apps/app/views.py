@@ -1,24 +1,19 @@
-import asyncio
 import json
-import logging
 
-import aio_pika
-import pika
-from aio_pika import Message
 from django.core.cache import cache
 from django.http import JsonResponse, HttpResponse
 from django.views import View
 
 from apps.app.constants import REDIS_TTL
 from apps.app.models import RawData
-from kafka_config import KafkaConfig, AIOKafka
+from kafka_config import AIOKafka
 from rabbitmq_config import RabbitMQ_CONF
 from utils.jsons import obj_to_json
 
 
-class GetFiles(View):
+class Files(View):
     async def get(self, request):
-        return HttpResponse('')
+        return HttpResponse('file')
 
 
 class Redis(View):

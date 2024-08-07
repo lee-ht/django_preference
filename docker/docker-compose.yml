@@ -3,7 +3,7 @@ services:
 
   database:
     container_name: timescale-db
-    image: timescale/timescaledb
+    image: timescale/timescaledb:latest-pg16
     ports:
       - ${POSTGRES_PORT}
     environment:

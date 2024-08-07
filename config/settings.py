@@ -41,6 +41,7 @@ ALLOWED_HOSTS = ['127.0.0.1', HOST]
 INSTALLED_APPS = [
     "apps.app",
     "apps.pipline",
+    "apps.pages",
 
     # Websocket Packages
     "channels",
@@ -70,7 +71,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR.joinpath('static', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,7 +149,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'apps/../apps/app', 'static'),
+    BASE_DIR.joinpath('static'),
 ]
 
 # Default primary key field type
@@ -156,6 +157,6 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# async ORM
+# async 로 ORM 사용 시
 
-# os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
