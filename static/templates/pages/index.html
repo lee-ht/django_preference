@@ -3,10 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Index Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-    <h2>
-        메인 페이지
-    </h2>
+<h2 id="title">
+    INDEX
+</h2>
+<script>
+    function request(){
+        $.ajax({
+            type:"get",
+            url:"http://192.168.0.85:8048/db/file",
+            dataType:"text",
+            success: function (data) {
+                console.log(data);
+                $("#receive-text").html(`<h1>${data}</h1>>`);
+            }
+        });
+    }
+    request;
+</script>
+<div id="receive-text">
+Response
+</div>
+<button onclick="request()">Request</button>
 </body>
 </html>
