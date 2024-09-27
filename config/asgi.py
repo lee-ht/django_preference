@@ -13,15 +13,15 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.core.asgi import get_asgi_application
 
-from apps.pipline.urls import urlpatterns
+from apps.pipline.urls import urlpatterns, ws_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
     'websocket': AllowedHostsOriginValidator(  # Django 의 ALLOWED_HOSTS  &  request 의 ORIGIN header
-        URLRouter(
-            urlpatterns # + pattern
+        URLRouter(  # + pattern
+            urlpatterns + ws_urlpatterns
         )
     ),
 })
