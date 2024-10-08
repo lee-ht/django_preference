@@ -1,5 +1,19 @@
 services:
 
+  application:
+    container_name: webserver
+    image: web_image
+    build:
+      context: ../
+      dockerfile: dockerfile
+    ports:
+      - ${APP_PORT}
+    depends_on:
+      - database
+      - redis
+      - kafka
+    restart: always
+
   database:
     container_name: timescale-db
     image: timescale/timescaledb:latest-pg16
@@ -10,6 +24,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PW}
       POSTGRES_INITDB_ARGS: --encoding=UTF-8
+    volumes:
+      - postgresql:/var/www/html/pgsql
     restart: always
 
   redis:
@@ -59,3 +75,6 @@ services:
 #      RABBITMQ_DEFAULT_USER: admin
 #      RABBITMQ_DEFAULT_PASS: admin
     restart: always
+
+volumes:
+  postgresql:
