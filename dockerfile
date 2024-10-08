@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8048
 
-CMD ["python","manage.py","runserver","192.168.0.85:8048"]
+CMD ["python","manage.py","runserver","0.0.0.0:8048"]
