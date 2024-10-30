@@ -14,6 +14,15 @@ services:
       - kafka
     restart: always
 
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    build:
+      dockerfile: dockerfile
+    ports:
+      - "80:80"
+    restart: always
+
   database:
     container_name: timescale-db
     image: timescale/timescaledb:latest-pg16
