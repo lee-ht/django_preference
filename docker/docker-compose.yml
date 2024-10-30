@@ -21,6 +21,8 @@ services:
       dockerfile: dockerfile
     ports:
       - "80:80"
+    environment:
+      SERVER_HOST: ${NGINX_HOST}
     restart: always
 
   database:
