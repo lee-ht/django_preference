@@ -36,7 +36,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PW}
       POSTGRES_INITDB_ARGS: --encoding=UTF-8
     volumes:
-      - postgresql:/var/lib/postgresql/data # 내부 마운트 디렉토리 Path
+      - postgresql:/home/postgres/pgdata/data # 내부 마운트 디렉토리 Path
     restart: always
 
   redis:
