@@ -3,7 +3,7 @@ server {
     listen  [::]:80;
     server_name  localhost;
 
-    #access_log  /var/log/nginx/host.access.log  main;
+    access_log  /var/log/nginx/${SERVER_HOST}.access.log  main;
 
     location / {
         root   /usr/share/nginx/html;
@@ -13,6 +13,10 @@ server {
         proxy_set_header    X-Real-IP           $remote_addr;
         proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
         proxy_redirect      off;
+    }
+
+    location /static {
+        alias /staticfiles/;
     }
 
     #error_page  404              /404.html;

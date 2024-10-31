@@ -8,6 +8,8 @@ services:
       dockerfile: dockerfile
     ports:
       - ${APP_PORT}
+    volumes:
+      - static-files:/app/staticfiles
     depends_on:
       - database
       - redis
@@ -21,6 +23,8 @@ services:
       dockerfile: dockerfile
     ports:
       - "80:80"
+    volumes:
+      - static-files:/staticfiles
     environment:
       SERVER_HOST: ${NGINX_HOST}
     restart: always
@@ -89,3 +93,4 @@ services:
 
 volumes:
   postgresql:
+  static-files:
