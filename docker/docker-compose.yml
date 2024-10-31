@@ -1,7 +1,7 @@
 services:
 
   application:
-    container_name: webserver
+    container_name: app-server
     image: web_image
     build:
       context: ../
@@ -15,7 +15,7 @@ services:
     restart: always
 
   nginx:
-    container_name: nginx
+    container_name: nginx-ws
     image: nginx:latest
     build:
       dockerfile: dockerfile
