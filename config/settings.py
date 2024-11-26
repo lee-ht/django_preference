@@ -181,6 +181,7 @@ os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 CORS_ORIGIN_WHITELIST = ['http://localhost']
 CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 CORS_ALLOW_HEADERS = []
+CORS_ALLOW_CREDENTIALS = True
 
 # 로깅
 LOG_DIR = Path(BASE_DIR).joinpath('logs')
