@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "channels",
     "daphne",
 
+    "corsheaders",
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,10 +59,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware', # jwt 등의 토큰 사용 시 필요 x
+    'django.middleware.csrf.CsrfViewMiddleware',  # jwt 등의 토큰 사용 시 필요 x
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -172,9 +175,12 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# async 로 ORM 사용 시
-
+# async 로 ORM 사용 시 ( 빌드 시 사용 x )
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+
+CORS_ORIGIN_WHITELIST = ['http://localhost']
+CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
+CORS_ALLOW_HEADERS = []
 
 # 로깅
 LOG_DIR = Path(BASE_DIR).joinpath('logs')
