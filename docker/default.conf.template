@@ -3,7 +3,8 @@ server {
     listen  [::]:80;
     server_name  localhost;
 
-    access_log  /var/log/nginx/${SERVER_HOST}.access.log  main;
+    access_log /var/log/nginx/react.access.log;
+    error_log /var/log/nginx/react.error.log;
 
     location / {
         root   /usr/share/nginx/html;
