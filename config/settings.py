@@ -178,6 +178,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # async 로 ORM 사용 시 ( 빌드 시 사용 x )
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 CORS_ORIGIN_WHITELIST = ['http://localhost']
 CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 CORS_ALLOW_HEADERS = []
