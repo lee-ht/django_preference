@@ -17,6 +17,10 @@ services:
     restart: always
     entrypoint: /bin/bash -c "
       ./docker/entrypoint.sh"
+    # entrypoint: sh -c "
+    #   python manage.py collectstatic --noinput &&
+    #   python manage.py migrate &&
+    #   daphne busan_nox.asgi:application -b 0.0.0.0 -p 8048"
 
   nginx:
     container_name: nginx-ws
